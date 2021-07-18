@@ -1,0 +1,1 @@
+web: java -jar blog/target/blog-0.0.1-SNAPSHOT.war
