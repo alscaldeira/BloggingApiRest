@@ -1,1 +1,1 @@
-web: java --port {$PORT:80} $JAVA_OPTS -jar target/blog-0.0.1-SNAPSHOT.war
+web: java --server.port={$PORT:80} $JAVA_OPTS -jar target/blog-0.0.1-SNAPSHOT.war
