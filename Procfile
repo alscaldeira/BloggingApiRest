@@ -1,1 +1,1 @@
-web: java --server.port=$PORT $JAVA_OPTS -jar target/blog-0.0.1-SNAPSHOT.war
+web: java -Dswarm.port=$PORT $JAVA_OPTS -jar target/blog-0.0.1-SNAPSHOT.war
