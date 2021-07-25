@@ -46,7 +46,7 @@ public class UserController {
 	
 	@GetMapping("/emailvalid")
 	public ResponseEntity<User> isEmailValid(@RequestParam String email){
-		return userRepository.findByEmail(email).isPresent() ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+		return userRepository.findByEmail(email).isPresent() ? ResponseEntity.ok().build() : ResponseEntity.ok().build();
 	}
 	
 	@PostMapping
