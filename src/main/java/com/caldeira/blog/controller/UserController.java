@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,7 +46,7 @@ public class UserController {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	@GetMapping("/emailvalid")
+	@GetMapping("/emailvalid/{email}")
 	public ResponseEntity isEmailValid(@PathVariable String email){
 		return userRepository.findByEmail(email).isPresent() ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
 	}
