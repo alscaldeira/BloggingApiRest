@@ -39,14 +39,13 @@ public class UserController {
 		
 		userRepository.findAllActiveUsers().forEach(user -> {
 			userDto.add(new UserDto(user));
-		});;
+		});
 		
 		return ResponseEntity.ok(userDto);
 	}
 	
-	@SuppressWarnings("rawtypes")
 	@GetMapping("/emailvalid")
-	public ResponseEntity isEmailValid(@RequestParam String email){
+	public ResponseEntity<User> isEmailValid(@RequestParam String email){
 		return userRepository.findByEmail(email).isPresent() ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
 	}
 	
