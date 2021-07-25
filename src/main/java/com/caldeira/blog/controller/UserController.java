@@ -42,6 +42,11 @@ public class UserController {
 		return ResponseEntity.ok(userDto);
 	}
 	
+	@GetMapping
+	public ResponseEntity isEmailValid(@RequestBody String email){
+		return userRepository.findByEmail(email).isPresent() ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
+	}
+	
 	@PostMapping
 	public ResponseEntity<UserDto> signup(@RequestBody User user) {
 		
