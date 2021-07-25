@@ -44,7 +44,7 @@ public class UserController {
 	}
 	
 	@SuppressWarnings("rawtypes")
-	@GetMapping
+	@GetMapping("/emailvalid")
 	public ResponseEntity isEmailValid(@RequestHeader String email){
 		return userRepository.findByEmail(email).isPresent() ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
 	}
