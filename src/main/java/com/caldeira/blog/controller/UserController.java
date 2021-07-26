@@ -66,6 +66,18 @@ public class UserController {
 			return ResponseEntity.ok(new UserDto(user));
 		}
 	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<UserDto> login(@RequestBody UserDto userDto) {
+		Optional<User> user = userRepository.findActiveUserByUsername(userDto.getUsername());
+		if(user.isPresent()) {
+			if(userDto.getPassword().equals(user.get().getPassword())) {
+				return ResponseEntity.ok(new UserDto(user.get()));
+			}
+		}
+		return ResponseEntity.badRequest().build();
+		
+	}
 
 	
 	@GetMapping("/{id}")

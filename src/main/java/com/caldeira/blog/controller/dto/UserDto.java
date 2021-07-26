@@ -22,7 +22,6 @@ public class UserDto {
 		this.setId(user.getId());
 		this.setLastName(user.getLastName());
 		this.setName(user.getName());
-		this.setPassword(user.getPassword());
 		this.setUsername(user.getUsername());
 		this.setActive(user.getActive());
 		this.setEmail(user.getEmail());
@@ -83,4 +82,11 @@ public class UserDto {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	@Override
+	public String toString() {
+		return "UserDto [id=" + id + ", username=" + username + ", name=" + name + ", lastName=" + lastName
+				+ ", password=" + password + ", posts=" + posts + ", active=" + active + ", email=" + email + "]";
+	}
+	
 }
