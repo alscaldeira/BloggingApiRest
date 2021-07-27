@@ -1,20 +1,28 @@
 package com.caldeira.blog.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.caldeira.blog.controller.dto.UserDto;
 import com.caldeira.blog.repository.PostRepository;
 
 @Entity
-public class User {
-
+public class User implements UserDetails {
+	private static final long serialVersionUID = 1L;
+	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String username;
@@ -24,8 +32,11 @@ public class User {
 	private Boolean active;
 	private String email;
 	
-	@OneToMany(mappedBy = "user")
-	private List<Post> posts;
+	@ManyToMany(fetch = FetchType.EAGER)
+	private List<Profile> profiles = new ArrayList<Profile>(); 
+
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	private Set<Post> posts;
 	
 	public User() { }
 	
@@ -40,10 +51,8 @@ public class User {
 		
 		List<Post> posts = getPosts(user.getPosts(), postRepository);
 		
-		if (posts != null) {
-			this.setPosts(new ArrayList<Post>());
-		} else {
-			this.setPosts(posts);
+		if (posts == null) {
+			this.setPosts((Set<Post>) posts);
 		}
 	}
 	
@@ -66,6 +75,7 @@ public class User {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	@Override
 	public String getUsername() {
 		return username;
 	}
@@ -84,16 +94,17 @@ public class User {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+	@Override
 	public String getPassword() {
 		return password;
 	}
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public List<Post> getPosts() {
+	public Set<Post> getPosts() {
 		return posts;
 	}
-	public void setPosts(List<Post> posts) {
+	public void setPosts(Set<Post> posts) {
 		this.posts = posts;
 	}
 	public Boolean getActive() {
@@ -113,5 +124,30 @@ public class User {
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", name=" + name + ", lastName=" + lastName + ", password="
 				+ password + ", active=" + active + ", email=" + email + ", posts=" + posts + "]";
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return this.profiles;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return this.active;
 	}
 }

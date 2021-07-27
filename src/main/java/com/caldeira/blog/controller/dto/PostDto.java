@@ -1,6 +1,5 @@
 package com.caldeira.blog.controller.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.caldeira.blog.model.Post;
@@ -24,18 +23,6 @@ public class PostDto {
 		this.setTitle(post.getTitle());
 		this.setUser(post.getUser().getId());
 		this.setViews(post.getViews());
-		
-		// GETTING CATEGORIES FROM POST
-		if(post.getCategories() != null) {
-			if(post.getCategories().size() > 0) {
-				
-				List<String> listOfCategories = new ArrayList<String>();
-				for(int i=0; i < post.getCategories().size(); i++) {
-					listOfCategories.add(post.getCategories().get(i).getName());
-				}
-				this.setCategories(listOfCategories);
-			}
-		}
 	}
 	
 	public Long getId() {

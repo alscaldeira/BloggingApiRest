@@ -1,14 +1,11 @@
 package com.caldeira.blog.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import com.caldeira.blog.controller.dto.PostDto;
@@ -26,9 +23,6 @@ public class Post {
 	private String title;
 	private Long views;
 	
-	@ManyToMany(mappedBy = "posts")
-	private List<Category> categories;
-	
 	@ManyToOne
 	private User user;
 	
@@ -41,18 +35,6 @@ public class Post {
 		this.setTitle(postDto.getTitle());
 		this.setUser(userRepository.findById(postDto.getUser()).get());
 		this.setViews(postDto.getViews());
-		
-		// GETTING CATEGORIES FROM POST
-		if(postDto.getCategories() != null) {
-			if(postDto.getCategories().size() > 0) {
-				
-				List<Category> listOfCategories = new ArrayList<Category>();
-				for(Long i=(long) 0; i < postDto.getCategories().size(); i++) {
-					listOfCategories.add(categoryRepository.findById(i).get());
-				}
-				this.setCategories(listOfCategories);
-			}
-		}
 	}
 	
 	public Long getId() {
@@ -78,12 +60,6 @@ public class Post {
 	}
 	public void setTitle(String title) {
 		this.title = title;
-	}
-	public List<Category> getCategories() {
-		return categories;
-	}
-	public void setCategories(List<Category> categories) {
-		this.categories = categories;
 	}
 	public User getUser() {
 		return user;
