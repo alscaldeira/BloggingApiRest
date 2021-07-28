@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
@@ -32,9 +33,8 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.POST, "/user/login").permitAll()
 			.antMatchers(HttpMethod.GET, "/post/*").permitAll()
 			.anyRequest().authenticated()
-			.and().formLogin()
-			.and()
-			.csrf().disable();
+			.and().csrf().disable()
+			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 	
 	// Static resources configurer (js, css, img, etc.)
