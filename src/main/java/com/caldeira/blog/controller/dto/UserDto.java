@@ -3,6 +3,8 @@ package com.caldeira.blog.controller.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+
 import com.caldeira.blog.model.User;
 
 public class UserDto {
@@ -87,6 +89,10 @@ public class UserDto {
 	public String toString() {
 		return "UserDto [id=" + id + ", username=" + username + ", name=" + name + ", lastName=" + lastName
 				+ ", password=" + password + ", posts=" + posts + ", active=" + active + ", email=" + email + "]";
+	}
+
+	public UsernamePasswordAuthenticationToken convert() {
+		return new UsernamePasswordAuthenticationToken(username, password);
 	}
 	
 }
