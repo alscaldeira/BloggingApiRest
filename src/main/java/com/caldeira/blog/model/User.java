@@ -17,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.caldeira.blog.controller.dto.UserDto;
+import com.caldeira.blog.controller.dto.UserSignDto;
 import com.caldeira.blog.repository.PostRepository;
 
 @Entity
@@ -40,6 +41,16 @@ public class User implements UserDetails {
 	
 	public User() { }
 	
+	public User(UserSignDto userDto) {
+		this.setLastName(userDto.getLastName());
+		this.setName(userDto.getName());
+		this.setPassword(userDto.getPassword());
+		this.setUsername(userDto.getUsername());
+		this.setActive(true);
+		this.setEmail(userDto.getEmail());
+	}
+	
+	@SuppressWarnings("unchecked")
 	public User(UserDto user, PostRepository postRepository) {
 		this.setId(user.getId());
 		this.setLastName(user.getLastName());
@@ -49,14 +60,14 @@ public class User implements UserDetails {
 		this.setActive(user.getActive());
 		this.setEmail(user.getEmail());
 		
-		List<Post> posts = getPosts(user.getPosts(), postRepository);
+		List<Post> posts = findPosts(user.getPosts(), postRepository);
 		
 		if (posts == null) {
 			this.setPosts((Set<Post>) posts);
 		}
 	}
 	
-	private List<Post> getPosts(List<Long> posts, PostRepository postRepository) {
+	private List<Post> findPosts(List<Long> posts, PostRepository postRepository) {
 		
 		List<Post> post = new ArrayList<Post>();
 		

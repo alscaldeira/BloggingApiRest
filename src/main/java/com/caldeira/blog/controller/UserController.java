@@ -1,7 +1,5 @@
 package com.caldeira.blog.controller;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.caldeira.blog.controller.dto.UserDto;
+import com.caldeira.blog.controller.dto.UserSignDto;
 import com.caldeira.blog.model.User;
 import com.caldeira.blog.repository.PostRepository;
 import com.caldeira.blog.repository.UserRepository;
@@ -32,52 +31,26 @@ public class UserController {
 	@Autowired
 	private PostRepository postRepository;
 
-	@GetMapping
-	public ResponseEntity<List<UserDto>> getAll() {
-		
-		List<UserDto> userDto = new ArrayList<UserDto>();
-		
-		userRepository.findAllActiveUsers().forEach(user -> {
-			userDto.add(new UserDto(user));
-		});
-		
-		return ResponseEntity.ok(userDto);
-	}
-	
 	@GetMapping("/emailvalid")
 	public ResponseEntity<User> isEmailValid(@RequestParam String email){
 		return userRepository.findByEmail(email).isPresent() ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
 	}
 	
 	@PostMapping
-	public ResponseEntity<UserDto> signup(@RequestBody User user) {
+	public ResponseEntity<UserDto> signUp(@RequestBody UserSignDto userDto) {
 		
-		Optional<User> u = userRepository.findByEmail(user.getEmail());
+		Optional<User> u = userRepository.findByEmail(userDto.getEmail());
 		
-		System.out.println(u.toString());
-		
-		if(u.get().equals(null) || !u.isPresent()) {
-			user.setActive(true);
-			user = userRepository.save(user);
+		if(!u.isPresent()) {
+			User user = new User(userDto);
+			user = userRepository.save(new User(userDto));
 			return ResponseEntity.ok(new UserDto(user));
 		} else {
 			u.get().setActive(true);
-			user = userRepository.save(u.get());
+			User user = userRepository.save(u.get());
 			return ResponseEntity.ok(new UserDto(user));
 		}
 	}
-	
-	@PostMapping("/login")
-	public ResponseEntity<UserDto> login(@RequestBody UserDto userDto) {
-		Optional<User> user = userRepository.findActiveUserByUsername(userDto.getUsername());
-		if(user.isPresent()) {
-			if(userDto.getPassword().equals(user.get().getPassword())) {
-				return ResponseEntity.ok(new UserDto(user.get()));
-			}
-		}
-		return ResponseEntity.badRequest().build();
-	}
-
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<UserDto> getOne(@PathVariable Long id) {

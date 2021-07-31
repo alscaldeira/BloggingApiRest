@@ -1,6 +1,5 @@
 package com.caldeira.blog.controller.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,9 +13,9 @@ public class UserDto {
 	private String name;
 	private String lastName;
 	private String password;
-	private List<Long> posts = new ArrayList<Long>();
-	private Boolean active;
 	private String email;
+	private List<Long> posts;
+	private Boolean active;
 	
 	public UserDto() { }
 	
@@ -25,15 +24,7 @@ public class UserDto {
 		this.setLastName(user.getLastName());
 		this.setName(user.getName());
 		this.setUsername(user.getUsername());
-		this.setActive(user.getActive());
 		this.setEmail(user.getEmail());
-		
-		// ADD POSTS FROM USER.POSTS
-		if(user.getPosts() != null) {
-			user.getPosts().forEach( post -> {
-				this.posts.add(post.getId());
-			});
-		}		
 	}
 	
 	public Long getId() {
@@ -66,29 +57,26 @@ public class UserDto {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public List<Long> getPosts() {
-		return posts;
-	}
-	public void setPosts(List<Long> postId) {
-		this.posts = postId;
-	}
-	public Boolean getActive() {
-		return active;
-	}
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
 	public String getEmail() {
 		return email;
 	}
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public List<Long> getPosts() {
+		return posts;
+	}
 
-	@Override
-	public String toString() {
-		return "UserDto [id=" + id + ", username=" + username + ", name=" + name + ", lastName=" + lastName
-				+ ", password=" + password + ", posts=" + posts + ", active=" + active + ", email=" + email + "]";
+	public void setPosts(List<Long> posts) {
+		this.posts = posts;
+	}
+
+	public Boolean getActive() {
+		return active;
+	}
+
+	public void setActive(Boolean active) {
+		this.active = active;
 	}
 
 	public UsernamePasswordAuthenticationToken convert() {
