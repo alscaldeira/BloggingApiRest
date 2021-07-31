@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.caldeira.blog.model.User;
@@ -22,7 +21,6 @@ public class TokenService {
 	private String secret;
 	
 	public String generateToken(Authentication authentication) {
-		
 		
 		User loggedin = (User) authentication.getPrincipal();
 		Date today = new Date();

@@ -1,7 +1,6 @@
 package com.caldeira.blog.config.security;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -43,9 +42,10 @@ public class AuthenticationViaTokenFilter extends OncePerRequestFilter{
 
 	private void authenticateUser(String token) {
 		Long idUser = tokenService.getIdUsuario(token);
-		Optional<User> user = userRepository.findById(idUser);
+		User user = userRepository.findById(idUser).get();
+
 		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user, null, 
-																						   user.get().getAuthorities());
+																						   user.getAuthorities());
 		SecurityContextHolder.getContext().setAuthentication(auth);
 	}
 
@@ -55,6 +55,7 @@ public class AuthenticationViaTokenFilter extends OncePerRequestFilter{
 		if(token == null || token.isEmpty() || !token.startsWith("Bearer ")) {
 			return null;
 		}
+		
 		
 		return token.substring(7, token.length());
 	}

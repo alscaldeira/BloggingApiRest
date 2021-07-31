@@ -10,7 +10,7 @@ public class HomeController {
 
 	@GetMapping
 	public String home() {
-		return "Hello, this is the blog api rest";
+		return "Hello, this is the Blogging REST API. Go to /swagger-ui.html to know the endpoints of the application";
 	}
 	
 }

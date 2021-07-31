@@ -2,6 +2,7 @@ package com.caldeira.blog.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
 import com.caldeira.blog.controller.dto.CategoryDto;
+import com.caldeira.blog.repository.CategoryRepository;
 import com.caldeira.blog.repository.PostRepository;
 
 @Entity
@@ -19,18 +21,29 @@ public class Category {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	private String description;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private List<Post> posts;
 	
 	public Category() { }
 	
-	public Category(CategoryDto categoryDto, PostRepository postRepository) {
-		this.id = categoryDto.getId();
-		this.name = categoryDto.getName();
-		this.description = categoryDto.getDescription();
-		this.posts = new ArrayList<Post>();
+	public Category(String name) {
+		this.name = name;
+	}
+	
+	public Category(CategoryDto categoryDto, PostRepository postRepository, CategoryRepository categoryRepository) {
+		Optional<Category> category = categoryRepository.findByName(categoryDto.getName());
+		
+		if(category.isPresent()) {
+			this.id = category.get().getId();
+			this.name = categoryDto.getName();
+			this.posts = new ArrayList<Post>();
+		} else {
+			Category categorySaved = categoryRepository.save(new Category(categoryDto.getName()));
+			this.id = categorySaved.getId();
+			this.name = categorySaved.getName();
+			this.posts = categorySaved.getPosts();
+		}
 		
 		//ADD CATEGORIES TO THIS.POST
 		if(categoryDto.getPosts() != null || !categoryDto.getPosts().equals(null)) {
@@ -51,12 +64,6 @@ public class Category {
 	}
 	public void setName(String name) {
 		this.name = name;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
 	}
 	public List<Post> getPosts() {
 		return posts;

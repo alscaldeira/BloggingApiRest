@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.caldeira.blog.controller.dto.PostDto;
+import com.caldeira.blog.model.Category;
 import com.caldeira.blog.model.Post;
 import com.caldeira.blog.repository.CategoryRepository;
 import com.caldeira.blog.repository.PostRepository;
@@ -35,22 +36,17 @@ public class PostController {
 	UserRepository userRepository;
 	
 	@GetMapping
-	public ResponseEntity<List<PostDto>> getAll() {
+	public ResponseEntity<List<PostDto>> getTheBests() {
 		List<PostDto> postDto = new ArrayList<PostDto>();
 		
-		List<Post> posts = postRepository.findAll();
+		Optional<List<Post>> posts = postRepository.findTheMoreViewed();
 		
-		if(posts.isEmpty()) {
+		if(!posts.isPresent())
 			return ResponseEntity.notFound().build();
-		}
 		
-		if(posts != null) {
-			if(!posts.isEmpty()) {
-				for(int i=0; i < posts.size(); i++) {
-					if(posts.get(i).getUser().getActive()) {
-						postDto.add(new PostDto(posts.get(i)));
-					}
-				}
+		for(int i=0; i < posts.get().size(); i++) {
+			if(posts.get().get(i).getUser().getActive()) {
+				postDto.add(new PostDto(posts.get().get(i)));
 			}
 		}
 		return ResponseEntity.ok(postDto);
@@ -96,6 +92,12 @@ public class PostController {
 	
 	@PostMapping
 	public ResponseEntity<PostDto> create(@RequestBody PostDto postDto) {
+		for(int i=0; i < postDto.getCategories().size(); i++) {
+			Optional<Category> category = categoryRepository.findByName(postDto.getCategories().get(0));
+			if(!category.isPresent()) 
+				categoryRepository.save(new Category(postDto.getCategories().get(0)));
+		}
+		
 		Post post = new Post(postDto, userRepository, categoryRepository);
 		post.setViews(0L);
 		postDto = new PostDto(postRepository.save(post));
