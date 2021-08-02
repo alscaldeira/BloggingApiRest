@@ -13,9 +13,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	@Query(value = "select u from User u where u.active = true")
 	public List<User> findAllActiveUsers();
 	
-	@Query("select u from User u where u.id = 1")
+	@Query("select u from User u where u.username = ?1 and u.active = true")
 	public Optional<User> findActiveUserByUsername(String username);
 
 	public Optional<User> findByEmail(String email);
+	
+	public Optional<User> findByUsername(String username);
 	
 }

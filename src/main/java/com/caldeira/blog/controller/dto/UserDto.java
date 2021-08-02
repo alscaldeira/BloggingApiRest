@@ -8,31 +8,21 @@ import com.caldeira.blog.model.User;
 
 public class UserDto {
 	
-	private Long id;
 	private String username;
 	private String name;
 	private String lastName;
 	private String password;
 	private String email;
-	private List<Long> posts;
-	private Boolean active;
 	
 	public UserDto() { }
 	
 	public UserDto(User user) {
-		this.setId(user.getId());
 		this.setLastName(user.getLastName());
 		this.setName(user.getName());
 		this.setUsername(user.getUsername());
 		this.setEmail(user.getEmail());
 	}
 	
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
 	public String getUsername() {
 		return username;
 	}
@@ -62,21 +52,6 @@ public class UserDto {
 	}
 	public void setEmail(String email) {
 		this.email = email;
-	}
-	public List<Long> getPosts() {
-		return posts;
-	}
-
-	public void setPosts(List<Long> posts) {
-		this.posts = posts;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public UsernamePasswordAuthenticationToken convert() {

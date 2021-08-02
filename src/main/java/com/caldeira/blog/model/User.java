@@ -40,7 +40,7 @@ public class User implements UserDetails {
 	private Set<Post> posts;
 	
 	public User() { }
-	
+
 	public User(UserSignDto userDto) {
 		this.setLastName(userDto.getLastName());
 		this.setName(userDto.getName());
@@ -50,21 +50,12 @@ public class User implements UserDetails {
 		this.setEmail(userDto.getEmail());
 	}
 	
-	@SuppressWarnings("unchecked")
 	public User(UserDto user, PostRepository postRepository) {
-		this.setId(user.getId());
 		this.setLastName(user.getLastName());
 		this.setName(user.getName());
 		this.setPassword(user.getPassword());
 		this.setUsername(user.getUsername());
-		this.setActive(user.getActive());
 		this.setEmail(user.getEmail());
-		
-		List<Post> posts = findPosts(user.getPosts(), postRepository);
-		
-		if (posts == null) {
-			this.setPosts((Set<Post>) posts);
-		}
 	}
 	
 	private List<Post> findPosts(List<Long> posts, PostRepository postRepository) {
