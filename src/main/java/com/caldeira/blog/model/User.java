@@ -3,8 +3,10 @@ package com.caldeira.blog.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -13,12 +15,14 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.caldeira.blog.controller.dto.UserDto;
 import com.caldeira.blog.controller.dto.UserSignDto;
-import com.caldeira.blog.repository.PostRepository;
+import com.caldeira.blog.repository.UserRepository;
 
 @Entity
 public class User implements UserDetails {
@@ -33,7 +37,7 @@ public class User implements UserDetails {
 	private Boolean active;
 	private String email;
 	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
 	private List<Profile> profiles = new ArrayList<Profile>(); 
 
 	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
@@ -50,25 +54,33 @@ public class User implements UserDetails {
 		this.setEmail(userDto.getEmail());
 	}
 	
-	public User(UserDto user, PostRepository postRepository) {
-		this.setLastName(user.getLastName());
-		this.setName(user.getName());
-		this.setPassword(user.getPassword());
-		this.setUsername(user.getUsername());
-		this.setEmail(user.getEmail());
-	}
-	
-	private List<Post> findPosts(List<Long> posts, PostRepository postRepository) {
+	public User(UserDto userDto, UserRepository userRepository) {
+		Optional<User> userOptional = userRepository.findByUsername(userDto.getUsername());
 		
-		List<Post> post = new ArrayList<Post>();
-		
-		if(posts != null) {
-			for(int i=0; i < posts.size(); i++) {
-				post.add(postRepository.findById(posts.get(i)).get());
-			}
-			return post;
+		if(userOptional.isPresent()) {
+			User user = userOptional.get();
+			this.setId(user.getId());
+			this.setLastName(user.getLastName());
+			this.setName(user.getName());
+			this.setPassword(user.getPassword());
+			this.setUsername(user.getUsername());
+			this.setEmail(user.getEmail());
+			this.setPosts(user.getPosts());
+			this.setActive(user.getActive());
+			this.profiles = new ArrayList<Profile>();
+			this.profiles.add(new Profile("ADM"));
+			
+			// IF USER IS NOT PRESENT, IT'S A NEW USER
+		} else {
+			this.setLastName(userDto.getLastName());
+			this.setName(userDto.getName());
+			this.setPassword(new BCryptPasswordEncoder().encode(userDto.getPassword()));
+			this.setUsername(userDto.getUsername());
+			this.setEmail(userDto.getEmail());
+			this.setActive(true);
+			this.profiles = new ArrayList<Profile>();
+			this.profiles.add(new Profile("ADM"));
 		}
-		return null;
 	}
 	
 	public Long getId() {
@@ -151,5 +163,9 @@ public class User implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return this.active;
+	}
+
+	public UsernamePasswordAuthenticationToken convert() {
+		return new UsernamePasswordAuthenticationToken(username, password);
 	}
 }

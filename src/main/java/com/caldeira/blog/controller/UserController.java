@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.caldeira.blog.controller.dto.UserDto;
 import com.caldeira.blog.controller.dto.UserSignDto;
 import com.caldeira.blog.model.User;
-import com.caldeira.blog.repository.PostRepository;
 import com.caldeira.blog.repository.UserRepository;
 
 @RestController
@@ -28,9 +27,6 @@ public class UserController {
 	@Autowired
 	UserRepository userRepository;
 	
-	@Autowired
-	private PostRepository postRepository;
-
 	@GetMapping("/emailvalid")
 	public ResponseEntity<User> isEmailValid(@RequestParam String email){
 		return userRepository.findByEmail(email).isPresent() ? ResponseEntity.ok().build() : ResponseEntity.notFound().build();
@@ -75,15 +71,14 @@ public class UserController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<UserDto> update(@RequestBody UserDto userDto, @PathVariable Long id) {
-		UserDto oldUserDto = new UserDto(userRepository.findById(id).get());
+		Optional<User> userOptional = userRepository.findByUsername(userDto.getUsername());
 		
-		if(oldUserDto.equals(null) || oldUserDto == null) {
+		if(!userOptional.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
 		
-		userDto.setId(oldUserDto.getId());
-		User user = new User();
-		user = new User(userDto, postRepository);
+		User user = userOptional.get();
+		user = new User(userDto, userRepository);
 		
 		UserDto userToReturn = new UserDto(userRepository.save(user));
 		return ResponseEntity.ok(userToReturn);

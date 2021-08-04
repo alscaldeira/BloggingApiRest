@@ -13,7 +13,13 @@ public class Profile implements GrantedAuthority {
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String nome;
+	private String name;
+	
+	public Profile(String name) {
+		this.name = name;
+	}
+	
+	public Profile() { }
 	
 	public Long getId() {
 		return id;
@@ -21,14 +27,14 @@ public class Profile implements GrantedAuthority {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setNome(String name) {
+		this.name = name;
 	}
 	@Override
 	public String getAuthority() {
-		return nome;
+		return name;
 	}
 }

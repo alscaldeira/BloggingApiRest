@@ -1,7 +1,5 @@
 package com.caldeira.blog.controller.dto;
 
-import java.util.List;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import com.caldeira.blog.model.User;

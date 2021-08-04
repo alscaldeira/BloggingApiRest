@@ -3,13 +3,8 @@ package com.caldeira.blog.controller.dto;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion;
 
 import com.caldeira.blog.model.User;
-
-import io.jsonwebtoken.SignatureAlgorithm;
 
 public class LoginDto {
 
@@ -25,7 +20,7 @@ public class LoginDto {
 	
 	@NotBlank(message = "Password should not be blank")
 	private String password;
-
+	
 	public UsernamePasswordAuthenticationToken convert() {
 		return new UsernamePasswordAuthenticationToken(username, password);
 	}

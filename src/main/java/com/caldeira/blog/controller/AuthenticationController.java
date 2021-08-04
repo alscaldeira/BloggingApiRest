@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +16,6 @@ import com.caldeira.blog.controller.dto.SignUpMessageDto;
 import com.caldeira.blog.controller.dto.TokenDto;
 import com.caldeira.blog.controller.dto.UserDto;
 import com.caldeira.blog.model.User;
-import com.caldeira.blog.repository.PostRepository;
 import com.caldeira.blog.repository.UserRepository;
 
 @RestController
@@ -32,9 +30,6 @@ public class AuthenticationController {
 	
 	@Autowired
 	private TokenService tokenService;
-	
-	@Autowired
-	PostRepository postRepository;
 	
 	@PostMapping
 	public ResponseEntity<TokenDto> authenticate(@RequestBody LoginDto user) {
@@ -59,8 +54,8 @@ public class AuthenticationController {
 			return ResponseEntity.badRequest().body(new SignUpMessageDto("Email already in use"));
 		}
 		
-		User user = userRepository.save(new User(userDto, postRepository));
-		
+		User user = userRepository.save(new User(userDto, userRepository));
+
 		return ResponseEntity.ok(new UserDto(user));
 	}
 }
