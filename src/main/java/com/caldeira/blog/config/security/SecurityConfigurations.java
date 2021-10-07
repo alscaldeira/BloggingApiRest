@@ -45,12 +45,13 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.GET, "/category/*").permitAll()
-			.antMatchers(HttpMethod.GET, "/user/*").permitAll()
+			.antMatchers(HttpMethod.GET, "/user").permitAll()
 			.antMatchers(HttpMethod.GET, "/post/*").permitAll()
 			.antMatchers(HttpMethod.GET, "/post").permitAll()
 			.antMatchers(HttpMethod.GET, "/").permitAll()
 			.antMatchers(HttpMethod.POST, "/auth").permitAll()
 			.antMatchers(HttpMethod.POST, "/auth/signup").permitAll()
+			.anyRequest().authenticated()
 			.and().csrf().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and().addFilterBefore(new AuthenticationViaTokenFilter(tokenService, userRepository),
