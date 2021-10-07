@@ -1,5 +1,7 @@
 package com.caldeira.blog.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -52,6 +54,19 @@ public class UserController {
 	public ResponseEntity<UserDto> getOne(@PathVariable Long id) {
 		UserDto userDto = new UserDto(userRepository.findById(id).get());
 		return !userDto.equals(null) || userDto != null ? ResponseEntity.ok(userDto) : ResponseEntity.badRequest().build(); 
+	}
+	
+	@GetMapping()
+	public ResponseEntity<List<UserDto>> getAll() {
+		List<User> users = userRepository.findAll();
+		
+		List<UserDto> usersDto = new ArrayList();
+		
+		for(User user : users) {
+			usersDto.add(new UserDto(user));
+		}
+		
+		return !usersDto.equals(null) || usersDto != null ? ResponseEntity.ok(usersDto) : ResponseEntity.badRequest().build(); 
 	}
 	
 	@DeleteMapping("/{id}")
