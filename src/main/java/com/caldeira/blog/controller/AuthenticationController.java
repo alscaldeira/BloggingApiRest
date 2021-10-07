@@ -40,7 +40,7 @@ public class AuthenticationController {
 		
 		String token = tokenService.generateToken(authentication);
 		
-		return ResponseEntity.ok(new TokenDto(token, "Bearer "));
+		return ResponseEntity.ok(new TokenDto(token, "Bearer"));
 	}
 	
 	@PostMapping("/signup")

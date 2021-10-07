@@ -52,7 +52,6 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 			.antMatchers(HttpMethod.GET, "/").permitAll()
 			.antMatchers(HttpMethod.POST, "/auth").permitAll()
 			.antMatchers(HttpMethod.POST, "/auth/signup").permitAll()
-			.anyRequest().hasRole("ADM")
 			.and().csrf().disable()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and().addFilterBefore(new AuthenticationViaTokenFilter(tokenService, userRepository),
