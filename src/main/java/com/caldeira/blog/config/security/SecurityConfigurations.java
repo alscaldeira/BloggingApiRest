@@ -45,7 +45,7 @@ public class SecurityConfigurations extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.GET, "/category/*").permitAll()
-			.antMatchers(HttpMethod.GET, "/user").permitAll()
+			.antMatchers(HttpMethod.GET, "/user/*").permitAll()
 			.antMatchers(HttpMethod.GET, "/post/*").permitAll()
 			.antMatchers(HttpMethod.GET, "/post").permitAll()
 			.antMatchers(HttpMethod.GET, "/").permitAll()
